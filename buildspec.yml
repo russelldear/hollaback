@@ -1,0 +1,8 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+       - cd Hollaback
+       - dotnet tool install --global Amazon.Lambda.Tools --version 3.2.3
+       - dotnet lambda deploy-function Hollaback -function-role Hollaback-role-wscx0m4i
