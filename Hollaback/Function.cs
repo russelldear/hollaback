@@ -21,18 +21,18 @@ namespace Hollaback
 
                 var postMessage = $"Post at {DateTime.UtcNow:O} UTC";
 
-                var response = await client.PostAsync($"https://graph.facebook.com/russfeeder/feed?message={postMessage}&access_token={pageToken}", new StringContent(""));
+                //var response = await client.PostAsync($"https://graph.facebook.com/russfeeder/feed?message={postMessage}&access_token={pageToken}", new StringContent(""));
 
-                if (response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("Facebook post complete.");
-                }
-                else
-                {
-                    var responseContent = await response?.Content?.ReadAsStringAsync();
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    Console.WriteLine("Facebook post complete.");
+                //}
+                //else
+                //{
+                //    var responseContent = await response?.Content?.ReadAsStringAsync();
 
-                    Console.WriteLine($"Facebook post failed: {response.StatusCode} {responseContent}");
-                }
+                //    Console.WriteLine($"Facebook post failed: {response.StatusCode} {responseContent}");
+                //}
             }
             catch (Exception ex)
             {
