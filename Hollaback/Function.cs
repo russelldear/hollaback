@@ -23,7 +23,17 @@ namespace Hollaback
         private List<string> feedUrls = new List<string>
         {
             "https://www.etymologynerd.com/1/feed",
-            "http://maryholm.com/feed/"
+            "http://maryholm.com/feed/",
+            "https://www.kleptones.com/blog/feed/",
+            "https://xkcd.com/rss.xml",
+            "https://alladodeisabel.blogspot.com/feeds/posts/default?alt=rss",
+            "http://london-underground.blogspot.com/atom.xml",
+            "http://explosm-feed.antonymale.co.uk/feed",
+            "https://stackoverflow.com/feeds/tag/xero-api",
+            "https://weirdinwellington.com/rss#_=_",
+            "http://feeds.feedburner.com/futilitycloset",
+            "http://craigjparker.blogspot.com/feeds/posts/default",
+            "https://mjtsai.com/blog/feed/"
         };
 
 
@@ -35,18 +45,25 @@ namespace Hollaback
 
                 foreach (var feedUrl in feedUrls)
                 {
-                    using var reader = XmlReader.Create(feedUrl);
-
-                    var feed = SyndicationFeed.Load(reader);
-
-                    var recentItems = feed.Items.Where(i => i.PublishDate > DateTime.UtcNow.AddMinutes(-6));
-
-                    foreach (var item in recentItems)
+                    try
                     {
-                        await PostItem(item, feed.Title.Text);
-                    }
+                        using var reader = XmlReader.Create(feedUrl);
 
-                    Console.WriteLine($"All items posted for {feedUrl}");
+                        var feed = SyndicationFeed.Load(reader);
+
+                        var recentItems = feed.Items;//.Where(i => i.PublishDate > DateTime.UtcNow.AddDays(-6));
+
+                        foreach (var item in recentItems)
+                        {
+                            await PostItem(item, feed.Title.Text);
+                        }
+
+                        Console.WriteLine($"All items posted for {feedUrl}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Posting failed for {feedUrl}: {ex.Message} {ex.StackTrace}");
+                    }
                 }
 
                 Console.WriteLine($"All items posted.");
