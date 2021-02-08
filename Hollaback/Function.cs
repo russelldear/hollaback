@@ -54,13 +54,13 @@ namespace Hollaback
 
                         //var recentItems = feed.Items.OrderByDescending(i => i.PublishDate).Take(1);
 
-                        Console.WriteLine($"UTC Now:      {DateTime.UtcNow:O}");
+                        Console.WriteLine($"UTC Now:______{DateTime.UtcNow:O}");
                         foreach (var item in feed.Items)
                         {
-                            Console.WriteLine($"Publish date: {item.PublishDate:O} - Is Recent? {item.PublishDate > DateTime.UtcNow.AddMinutes(-6)}");
+                            Console.WriteLine($"Publish date: {item.PublishDate.ToUniversalTime():O} - Is Recent? {item.PublishDate.ToUniversalTime() > DateTime.UtcNow.AddMinutes(-6)}");
                         }
 
-                        var recentItems = feed.Items.Where(i => i.PublishDate > DateTime.UtcNow.AddMinutes(-6));
+                        var recentItems = feed.Items.Where(i => i.PublishDate.ToUniversalTime() > DateTime.UtcNow.AddMinutes(-6));
 
                         foreach (var item in recentItems)
                         {
