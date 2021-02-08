@@ -33,7 +33,8 @@ namespace Hollaback
             "https://weirdinwellington.com/rss#_=_",
             "http://feeds.feedburner.com/futilitycloset",
             "http://craigjparker.blogspot.com/feeds/posts/default",
-            "https://mjtsai.com/blog/feed/"
+            "https://mjtsai.com/blog/feed/",
+            "https://www.rnz.co.nz/rss/national.xml"
         };
 
 
