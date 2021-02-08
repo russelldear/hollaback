@@ -8,6 +8,7 @@ using System.Xml;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
 using static Hollaback.Constants.EnvironmentVariables;
+using static System.Net.WebUtility;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -62,9 +63,9 @@ namespace Hollaback
         {
             Console.WriteLine(JsonConvert.SerializeObject(item));
 
-            var postMessage = $"{feedTitle} - {item.Title.Text} {Environment.NewLine} {item.Summary.Text} {Environment.NewLine}";
+            var postMessage = UrlEncode($"{feedTitle} - {item.Title.Text} {Environment.NewLine} {item.Summary.Text} {Environment.NewLine}");
 
-            var postLink = item.Links.FirstOrDefault().Uri;
+            var postLink = UrlEncode(item.Links.FirstOrDefault().Uri.ToString());
 
             var response = await _client.PostAsync($"https://graph.facebook.com/russfeeder/feed?message={postMessage}&link={postLink}&access_token={_pageToken}", new StringContent(""));
 
