@@ -94,7 +94,7 @@ namespace Hollaback
             }
             else
             {
-                var responseHeaders = string.Join(Environment.NewLine, response?.Headers.Select(h => $"{h.Key}:{h.Value}");
+                var responseHeaders = string.Join(Environment.NewLine, response?.Headers.Select(h => $"{h.Key}:{h.Value}"));
 
                 var responseContent = await response?.Content?.ReadAsStringAsync();
 
