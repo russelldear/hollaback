@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.ServiceModel.Syndication;
@@ -15,52 +16,68 @@ namespace Hollaback
 {
     public class Function
     {
+        private HttpClient _client = new HttpClient();
+        private string _pageToken;
+
+        private List<string> feedUrls = new List<string>
+        {
+            "https://www.etymologynerd.com/1/feed",
+            "http://maryholm.com/feed/"
+        };
+
+
         public async Task<string> FunctionHandler(string input, ILambdaContext context)
         {
             try
             {
-                var url = "https://www.etymologynerd.com/1/feed";
+                _pageToken = Environment.GetEnvironmentVariable(PageToken);
 
-                using var reader = XmlReader.Create(url);
-
-                var feed = SyndicationFeed.Load(reader);
-
-                var recentItems = feed.Items.Where(i => i.PublishDate > DateTime.UtcNow.AddDays(-28));
-
-                var pageToken = Environment.GetEnvironmentVariable(PageToken);
-
-                var client = new HttpClient();
-
-                foreach (var item in recentItems)
+                foreach (var feedUrl in feedUrls)
                 {
-                    Console.WriteLine(JsonConvert.SerializeObject(item));
+                    using var reader = XmlReader.Create(feedUrl);
 
-                    var postMessage = $"{feed.Title.Text} - {item.Title.Text} {Environment.NewLine} {item.Summary.Text} {Environment.NewLine}";
+                    var feed = SyndicationFeed.Load(reader);
 
-                    var postLink = item.Links.FirstOrDefault().Uri;
+                    var recentItems = feed.Items.Where(i => i.PublishDate > DateTime.UtcNow.AddDays(-28));
 
-                    var response = await client.PostAsync($"https://graph.facebook.com/russfeeder/feed?message={postMessage}&link={postLink}&access_token={pageToken}", new StringContent(""));
-
-                    if (response.IsSuccessStatusCode)
+                    foreach (var item in recentItems)
                     {
-                        Console.WriteLine("Facebook post complete.");
+                        await PostItem(item, feed.Title.Text);
                     }
-                    else
-                    {
-                        var responseContent = await response?.Content?.ReadAsStringAsync();
 
-                        Console.WriteLine($"Facebook post failed: {response.StatusCode} {responseContent}");
-                    }
+                    Console.WriteLine($"All items posted for {feedUrl}");
                 }
 
                 Console.WriteLine($"All items posted.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Facebook post failed: {ex.Message} {ex.StackTrace}");
+                Console.WriteLine($"Posting RSS feeds to Facebook failed: {ex.Message} {ex.StackTrace}");
             }
 
             return "Done";
+        }
+
+        private async Task PostItem(SyndicationItem item, string feedTitle)
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(item));
+
+            var postMessage = $"{feedTitle} - {item.Title.Text} {Environment.NewLine} {item.Summary.Text} {Environment.NewLine}";
+
+            var postLink = item.Links.FirstOrDefault().Uri;
+
+            var response = await _client.PostAsync($"https://graph.facebook.com/russfeeder/feed?message={postMessage}&link={postLink}&access_token={_pageToken}", new StringContent(""));
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Facebook post complete.");
+            }
+            else
+            {
+                var responseContent = await response?.Content?.ReadAsStringAsync();
+
+                Console.WriteLine($"Facebook post failed: {response.StatusCode} {responseContent}");
+            }
         }
     }
 }
