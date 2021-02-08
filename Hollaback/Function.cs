@@ -51,9 +51,9 @@ namespace Hollaback
 
                         var feed = SyndicationFeed.Load(reader);
 
-                        var recentItems = feed.Items.OrderByDescending(i => i.PublishDate).Take(1);
+                        //var recentItems = feed.Items.OrderByDescending(i => i.PublishDate).Take(1);
 
-                        //var recentItems = feed.Items.Where(i => i.PublishDate > DateTime.UtcNow.AddMinutes(-6));
+                        var recentItems = feed.Items.Where(i => i.PublishDate > DateTime.UtcNow.AddMinutes(-6));
 
                         foreach (var item in recentItems)
                         {
@@ -94,7 +94,7 @@ namespace Hollaback
             }
             else
             {
-                var responseHeaders = string.Join(Environment.NewLine, response?.Headers.Select(h => $"{h.Key}:{h.Value}"));
+                var responseHeaders = string.Join(" | ", response?.Headers.Select(h => $"{h.Key}:{string.Join(", ", h.Value)}"));
 
                 var responseContent = await response?.Content?.ReadAsStringAsync();
 
