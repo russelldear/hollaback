@@ -39,7 +39,7 @@ namespace Hollaback
 
                     var feed = SyndicationFeed.Load(reader);
 
-                    var recentItems = feed.Items.Where(i => i.PublishDate > DateTime.UtcNow.AddDays(-28));
+                    var recentItems = feed.Items.Where(i => i.PublishDate > DateTime.UtcNow.AddMinutes(-6));
 
                     foreach (var item in recentItems)
                     {
