@@ -64,8 +64,6 @@ namespace Hollaback
         {
             try
             {
-                Console.WriteLine($"UTC Now:______{DateTime.UtcNow:O}");
-
                 foreach (var feedUrl in feedUrls)
                 {
                     try
@@ -77,8 +75,6 @@ namespace Hollaback
 
                         foreach (var item in feed.Items)
                         {
-                            Console.WriteLine($"{JsonConvert.SerializeObject(item)}");
-
                             var isPosted = await _dynamoDbService.IsPosted(item.Id);
 
                             if (!isPosted)
