@@ -87,7 +87,7 @@ namespace Hollaback
                             }
                         }
 
-                        Console.WriteLine($"Captured {unpostedItems.Count} unposted items in {feed.Title} feed.");
+                        Console.WriteLine($"Captured {unpostedItems.Count} unposted items in {feed.Title.Text} feed.");
 
                         foreach (var item in unpostedItems)
                         {
