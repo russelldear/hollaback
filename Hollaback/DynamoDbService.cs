@@ -3,13 +3,12 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
 using Newtonsoft.Json;
+using static Hollaback.Constants.DynamoDb;
 
 namespace Hollaback
 {
     public class DynamoDbService
     {
-        private const string postedItemsTable = "posted-items";
-
         private AmazonDynamoDBClient _dynamoDbClient;
 
         public DynamoDbService(AmazonDynamoDBClient dynamoDbClient)
@@ -21,7 +20,7 @@ namespace Hollaback
         {
             try
             { 
-                var table = Table.LoadTable(_dynamoDbClient, postedItemsTable);
+                var table = Table.LoadTable(_dynamoDbClient, PostedItemsTable);
 
                 var retrievedId = await table.GetItemAsync(new Primitive(itemId));
 
@@ -29,7 +28,7 @@ namespace Hollaback
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to put item: {e.Message} - {e.StackTrace}");
+                Console.WriteLine($"Failed to retrieve item: {e.Message} - {e.StackTrace}");
 
                 return false;
             }
@@ -39,7 +38,7 @@ namespace Hollaback
         {
             try
             {
-                var table = Table.LoadTable(_dynamoDbClient, postedItemsTable);
+                var table = Table.LoadTable(_dynamoDbClient, PostedItemsTable);
 
                 var document = Document.FromJson(JsonConvert.SerializeObject(new Item { Id = itemId }));
 
