@@ -5,10 +5,10 @@ using System.Net.Http;
 using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
 using System.Xml;
+using Amazon.DynamoDBv2;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
 using static Hollaback.Constants.EnvironmentVariables;
-using static System.Net.WebUtility;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -17,10 +17,12 @@ namespace Hollaback
 {
     public class Function
     {
-        private HttpClient _client = new HttpClient();
+        private HttpClient _client;
         private string _pageToken;
+        private FacebookService _facebookService;
+        private DynamoDbService _dynamoDbService;
 
-        private List<string> feedUrls = new List<string>
+        private readonly List<string> feedUrls = new List<string>
         {
             "https://www.etymologynerd.com/1/feed",
             "http://maryholm.com/feed/",
@@ -37,35 +39,64 @@ namespace Hollaback
             "https://www.rnz.co.nz/rss/national.xml"
         };
 
+        public Function()
+        {
+            _client = new HttpClient();
+            _pageToken = Environment.GetEnvironmentVariable(PageToken);
+            _facebookService = new FacebookService(_client, _pageToken);
+
+            var dynamoDbClient = new AmazonDynamoDBClient();
+            _dynamoDbService = new DynamoDbService(dynamoDbClient);
+        }
+
+        public Function(string awsEndpoint) : this()
+        {
+            AmazonDynamoDBConfig clientConfig = new AmazonDynamoDBConfig
+            {
+                ServiceURL = awsEndpoint
+            };
+
+            var dynamoDbClient = new AmazonDynamoDBClient(clientConfig);
+            _dynamoDbService = new DynamoDbService(dynamoDbClient);
+        }
 
         public async Task<string> FunctionHandler(string input, ILambdaContext context)
         {
             try
             {
-                _pageToken = Environment.GetEnvironmentVariable(PageToken);
+                Console.WriteLine($"UTC Now:______{DateTime.UtcNow:O}");
 
                 foreach (var feedUrl in feedUrls)
                 {
                     try
                     {
-                        using var reader = XmlReader.Create(feedUrl);
+                        var unpostedItems = new List<SyndicationItem>();
 
+                        using var reader = XmlReader.Create(feedUrl);
                         var feed = SyndicationFeed.Load(reader);
 
-                        //var recentItems = feed.Items.OrderByDescending(i => i.PublishDate).Take(1);
-
-                        Console.WriteLine($"UTC Now:______{DateTime.UtcNow:O}");
                         foreach (var item in feed.Items)
                         {
-                            //Console.WriteLine($"Publish date: {item.PublishDate.ToUniversalTime():O} - Is Recent? {item.PublishDate.ToUniversalTime() > DateTime.UtcNow.AddMinutes(-6)}");
                             Console.WriteLine($"{JsonConvert.SerializeObject(item)}");
+
+                            var isPosted = await _dynamoDbService.IsPosted(item.Id);
+
+                            if (!isPosted)
+                            {
+                                unpostedItems.Add(item);
+                            }
                         }
 
-                        var recentItems = feed.Items.Where(i => i.PublishDate.ToUniversalTime() > DateTime.UtcNow.AddMinutes(-6));
+                        Console.WriteLine($"Captured {unpostedItems.Count} unposted items in {feed.Title} feed.");
 
-                        foreach (var item in recentItems)
+                        foreach (var item in unpostedItems)
                         {
-                            await PostItem(item, feed.Title.Text);
+                            if (!string.IsNullOrWhiteSpace(_pageToken))
+                            {
+                                await _facebookService.PostItem(item, feed.Title.Text);
+                            }
+
+                            await _dynamoDbService.SetPosted(item.Id);
                         }
 
                         Console.WriteLine($"All items posted for {feedUrl}");
@@ -84,30 +115,6 @@ namespace Hollaback
             }
 
             return "Done";
-        }
-
-        private async Task PostItem(SyndicationItem item, string feedTitle)
-        {
-            Console.WriteLine(JsonConvert.SerializeObject(item));
-
-            var postMessage = UrlEncode($"{feedTitle} - {item.Title.Text} {Environment.NewLine} {item.Summary.Text} {Environment.NewLine}");
-
-            var postLink = UrlEncode(item.Links.FirstOrDefault().Uri.ToString());
-
-            var response = await _client.PostAsync($"https://graph.facebook.com/russfeeder/feed?message={postMessage}&link={postLink}&access_token={_pageToken}", new StringContent(""));
-
-            if (response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Facebook post complete.");
-            }
-            else
-            {
-                var responseHeaders = string.Join(" | ", response?.Headers.Select(h => $"{h.Key}:{string.Join(", ", h.Value)}"));
-
-                var responseContent = await response?.Content?.ReadAsStringAsync();
-
-                Console.WriteLine($"Facebook post failed: {response.StatusCode} {responseContent} {responseHeaders}");
-            }
         }
     }
 }
