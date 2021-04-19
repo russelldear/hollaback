@@ -37,7 +37,8 @@ namespace Hollaback
             "http://craigjparker.blogspot.com/feeds/posts/default",
             "https://mjtsai.com/blog/feed/",
             "https://www.rnz.co.nz/rss/national.xml",
-            "https://www.youtube.com/feeds/videos.xml?channel_id=UCIRiWCPZoUyZDbydIqitHtQ"
+            "https://www.youtube.com/feeds/videos.xml?channel_id=UCIRiWCPZoUyZDbydIqitHtQ",
+            "https://www.theredhandfiles.com/feed/"
         };
 
         public Function()
