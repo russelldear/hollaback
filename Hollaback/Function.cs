@@ -39,7 +39,8 @@ namespace Hollaback
             "https://www.rnz.co.nz/rss/national.xml",
             "https://www.youtube.com/feeds/videos.xml?channel_id=UCIRiWCPZoUyZDbydIqitHtQ",
             "https://www.theredhandfiles.com/feed/",
-            "https://theoatmeal.com/feed/rss"
+            "https://theoatmeal.com/feed/rss",
+            "https://awsteele.com/feed.xml"
         };
 
         public Function()
