@@ -40,7 +40,8 @@ namespace Hollaback
             "https://www.youtube.com/feeds/videos.xml?channel_id=UCIRiWCPZoUyZDbydIqitHtQ",
             "https://www.theredhandfiles.com/feed/",
             "https://theoatmeal.com/feed/rss",
-            "https://awsteele.com/feed.xml"
+            "https://awsteele.com/feed.xml",
+            "https://toroabrewing.com/feed/"
         };
 
         public Function()
