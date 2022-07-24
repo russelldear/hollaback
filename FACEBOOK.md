@@ -1,3 +1,5 @@
+Create a private Facebook page.
+
 Create a Facebook app & GET a short-lived user access token from the Graph API Explorer page: https://developers.facebook.com/tools/explorer/{YOUR_APP_ID}/
 
 Include these permissions:

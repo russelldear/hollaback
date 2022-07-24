@@ -36,7 +36,12 @@ namespace Hollaback
             "http://feeds.feedburner.com/futilitycloset",
             "http://craigjparker.blogspot.com/feeds/posts/default",
             "https://mjtsai.com/blog/feed/",
-            "https://www.rnz.co.nz/rss/national.xml"
+            "https://www.rnz.co.nz/rss/national.xml",
+            "https://www.youtube.com/feeds/videos.xml?channel_id=UCIRiWCPZoUyZDbydIqitHtQ",
+            "https://www.theredhandfiles.com/feed/",
+            "https://theoatmeal.com/feed/rss",
+            "https://awsteele.com/feed.xml",
+            "https://toroabrewing.com/feed/"
         };
 
         public Function()
@@ -90,7 +95,7 @@ namespace Hollaback
                         }
                     }
 
-                    Console.WriteLine($"Captured {unpostedItems.Count} unposted items in {feed.Title.Text} feed.");
+                    //Console.WriteLine($"Captured {unpostedItems.Count} unposted items in {feed.Title.Text} feed.");
 
                     try
                     {
@@ -104,7 +109,7 @@ namespace Hollaback
                             await _dynamoDbService.SetPosted(item.Id);
                         }
 
-                        Console.WriteLine($"All items posted for {feedUrl}");
+                        //Console.WriteLine($"All items posted for {feedUrl}");
                     }
                     catch (Exception ex)
                     {
@@ -112,7 +117,7 @@ namespace Hollaback
                     }
                 }
 
-                Console.WriteLine($"All items posted.");
+                //Console.WriteLine($"All items posted.");
             }
             catch (Exception ex)
             {

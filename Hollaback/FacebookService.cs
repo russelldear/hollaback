@@ -21,7 +21,7 @@ namespace Hollaback
 
         public async Task PostItem(SyndicationItem item, string feedTitle)
         {
-            Console.WriteLine(JsonConvert.SerializeObject(item));
+            //Console.WriteLine(JsonConvert.SerializeObject(item));
 
             var postMessage = UrlEncode($"{feedTitle} - {item.Title.Text} {Environment.NewLine} {item.Summary.Text} {Environment.NewLine}");
 
@@ -31,7 +31,7 @@ namespace Hollaback
 
             if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Facebook post complete.");
+                //Console.WriteLine("Facebook post complete.");
             }
             else
             {

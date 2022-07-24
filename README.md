@@ -7,4 +7,5 @@ Posts RSS items to a Facebook page.
 
 ### Local 
 
+- Install localstack & terraform
 - Run `/infra/local/up.sh`
