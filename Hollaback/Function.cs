@@ -83,6 +83,7 @@ namespace Hollaback
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Retrieval failed for {feedUrl}: {ex.Message}");
+                        continue;
                     }
 
                     foreach (var item in feed.Items)
