@@ -23,9 +23,9 @@ namespace Hollaback
         {
             //Console.WriteLine(JsonConvert.SerializeObject(item));
 
-            var postMessage = UrlEncode($"{feedTitle} - {item.Title.Text} {Environment.NewLine} {item.Summary.Text} {Environment.NewLine}");
+            var postMessage = UrlEncode($"{feedTitle} - {item.Title?.Text} {Environment.NewLine} {item.Summary?.Text} {Environment.NewLine}");
 
-            var postLink = UrlEncode(item.Links.FirstOrDefault().Uri.ToString());
+            var postLink = UrlEncode(item.Links?.FirstOrDefault()?.Uri.ToString());
 
             var response = await _client.PostAsync($"https://graph.facebook.com/russfeeder/feed?message={postMessage}&link={postLink}&access_token={_pageToken}", new StringContent(""));
 

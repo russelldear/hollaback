@@ -25,23 +25,23 @@ namespace Hollaback
         private readonly List<string> feedUrls = new List<string>
         {
             "https://github.com/russelldear/catharsis/commits.atom",
-            "https://www.etymologynerd.com/1/feed",
-            "http://maryholm.com/feed/",
-            "https://www.kleptones.com/blog/feed/",
-            "https://xkcd.com/rss.xml",
-            "https://alladodeisabel.blogspot.com/feeds/posts/default?alt=rss",
-            "http://london-underground.blogspot.com/atom.xml",
-            "https://stackoverflow.com/feeds/tag/xero-api",
-            "https://weirdinwellington.com/rss#_=_",
-            "http://feeds.feedburner.com/futilitycloset",
-            "http://craigjparker.blogspot.com/feeds/posts/default",
-            "https://mjtsai.com/blog/feed/",
-            "https://www.rnz.co.nz/rss/national.xml",
-            "https://www.youtube.com/feeds/videos.xml?channel_id=UCIRiWCPZoUyZDbydIqitHtQ",
-            "https://www.theredhandfiles.com/feed/",
-            "https://theoatmeal.com/feed/rss",
-            "https://awsteele.com/feed.xml",
-            "https://toroabrewing.com/feed/"
+            //"https://www.etymologynerd.com/1/feed",
+            //"http://maryholm.com/feed/",
+            //"https://www.kleptones.com/blog/feed/",
+            //"https://xkcd.com/rss.xml",
+            //"https://alladodeisabel.blogspot.com/feeds/posts/default?alt=rss",
+            //"http://london-underground.blogspot.com/atom.xml",
+            //"https://stackoverflow.com/feeds/tag/xero-api",
+            //"https://weirdinwellington.com/rss#_=_",
+            //"http://feeds.feedburner.com/futilitycloset",
+            //"http://craigjparker.blogspot.com/feeds/posts/default",
+            //"https://mjtsai.com/blog/feed/",
+            //"https://www.rnz.co.nz/rss/national.xml",
+            //"https://www.youtube.com/feeds/videos.xml?channel_id=UCIRiWCPZoUyZDbydIqitHtQ",
+            //"https://www.theredhandfiles.com/feed/",
+            //"https://theoatmeal.com/feed/rss",
+            //"https://awsteele.com/feed.xml",
+            //"https://toroabrewing.com/feed/"
         };
 
         public Function()
