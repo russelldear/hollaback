@@ -24,6 +24,7 @@ namespace Hollaback
 
         private readonly List<string> feedUrls = new List<string>
         {
+            "https://github.com/russelldear/catharsis/commits.atom",
             "https://www.etymologynerd.com/1/feed",
             "http://maryholm.com/feed/",
             "https://www.kleptones.com/blog/feed/",
