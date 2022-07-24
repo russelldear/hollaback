@@ -66,25 +66,34 @@ namespace Hollaback
             {
                 foreach (var feedUrl in feedUrls)
                 {
+                    var unpostedItems = new List<SyndicationItem>();
+
+                    SyndicationFeed feed = null;
+
                     try
                     {
-                        var unpostedItems = new List<SyndicationItem>();
-
                         using var reader = XmlReader.Create(feedUrl);
-                        var feed = SyndicationFeed.Load(reader);
+                        feed = SyndicationFeed.Load(reader);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Retrieval failed for {feedUrl}: {ex.Message}");
+                    }
 
-                        foreach (var item in feed.Items)
+                    foreach (var item in feed.Items)
+                    {
+                        var isPosted = await _dynamoDbService.IsPosted(item.Id);
+
+                        if (!isPosted)
                         {
-                            var isPosted = await _dynamoDbService.IsPosted(item.Id);
-
-                            if (!isPosted)
-                            {
-                                unpostedItems.Add(item);
-                            }
+                            unpostedItems.Add(item);
                         }
+                    }
 
-                        Console.WriteLine($"Captured {unpostedItems.Count} unposted items in {feed.Title.Text} feed.");
+                    Console.WriteLine($"Captured {unpostedItems.Count} unposted items in {feed.Title.Text} feed.");
 
+                    try
+                    {
                         foreach (var item in unpostedItems)
                         {
                             if (!string.IsNullOrWhiteSpace(_pageToken))
