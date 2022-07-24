@@ -30,7 +30,6 @@ namespace Hollaback
             "https://xkcd.com/rss.xml",
             "https://alladodeisabel.blogspot.com/feeds/posts/default?alt=rss",
             "http://london-underground.blogspot.com/atom.xml",
-            "http://explosm-feed.antonymale.co.uk/feed",
             "https://stackoverflow.com/feeds/tag/xero-api",
             "https://weirdinwellington.com/rss#_=_",
             "http://feeds.feedburner.com/futilitycloset",
@@ -86,14 +85,22 @@ namespace Hollaback
                         continue;
                     }
 
-                    foreach (var item in feed.Items)
+                    try
                     {
-                        var isPosted = await _dynamoDbService.IsPosted(item.Id);
-
-                        if (!isPosted)
+                        foreach (var item in feed.Items)
                         {
-                            unpostedItems.Add(item);
+                            var isPosted = await _dynamoDbService.IsPosted(item.Id);
+
+                            if (!isPosted)
+                            {
+                                unpostedItems.Add(item);
+                            }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Queueing failed for {feedUrl}: {ex.Message}");
+                        continue;
                     }
 
                     //Console.WriteLine($"Captured {unpostedItems.Count} unposted items in {feed.Title.Text} feed.");
