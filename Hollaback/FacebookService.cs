@@ -25,9 +25,13 @@ namespace Hollaback
 
             var postMessage = UrlEncode($"{feedTitle} - {item.Title?.Text} {Environment.NewLine} {item.Summary?.Text} {Environment.NewLine}");
 
-            var postLink = UrlEncode(item.Links?.FirstOrDefault()?.Uri.ToString());
+            var postLink = item.Links.Any(l => l.RelationshipType == "alternate")
+                ? item.Links?.First(l => l.RelationshipType == "alternate")
+                : item.Links?.FirstOrDefault();
 
-            var response = await _client.PostAsync($"https://graph.facebook.com/russfeeder/feed?message={postMessage}&link={postLink}&access_token={_pageToken}", new StringContent(""));
+            var postLinkUri = UrlEncode(postLink.Uri.ToString());
+
+            var response = await _client.PostAsync($"https://graph.facebook.com/russfeeder/feed?message={postMessage}&link={postLinkUri}&access_token={_pageToken}", new StringContent(""));
 
             if (response.IsSuccessStatusCode)
             {
