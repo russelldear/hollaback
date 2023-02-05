@@ -44,6 +44,7 @@ namespace Hollaback
             // To get YouTube channel ids, you gotta search in the page for 'youtube.com/channel' to find a relevant link with the id in it
             "https://www.youtube.com/feeds/videos.xml?channel_id=UCIRiWCPZoUyZDbydIqitHtQ", // Mike Boyd
             "https://www.youtube.com/feeds/videos.xml?channel_id=UC4_Hdxt2pEhT-hNRyuTDadw", // Coach Julia
+            "https://showrss.info/other/shows.rss",
         };
 
         public Function()
