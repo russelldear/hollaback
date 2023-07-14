@@ -3,7 +3,7 @@ version: 0.2
 phases:
   build:
     commands:
-       - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel LTS
+       - Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile "$env:temp/dotnet-install.ps1"; powershell -executionpolicy bypass "$env:temp/dotnet-install.ps1"
        - cd Hollaback
        - dotnet tool install --global Amazon.Lambda.Tools --version 5.0.1
        - dotnet lambda deploy-function Hollaback -function-role Hollaback-role-wscx0m4i
