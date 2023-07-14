@@ -3,7 +3,11 @@ version: 0.2
 phases:
   build:
     commands:
-       - Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile "$env:temp/dotnet-install.ps1"; powershell -executionpolicy bypass "$env:temp/dotnet-install.ps1"
+       - declare repo_version=$(if command -v lsb_release &> /dev/null; then lsb_release -r -s; else grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"'; fi)
+       - wget https://packages.microsoft.com/config/ubuntu/$repo_version/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+       - sudo dpkg -i packages-microsoft-prod.deb
+       - rm packages-microsoft-prod.deb
+       - sudo apt update       
        - cd Hollaback
        - dotnet tool install --global Amazon.Lambda.Tools --version 5.0.1
        - dotnet lambda deploy-function Hollaback -function-role Hollaback-role-wscx0m4i
