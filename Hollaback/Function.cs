@@ -42,6 +42,7 @@ namespace Hollaback
             "https://www.youtube.com/feeds/videos.xml?channel_id=UC4_Hdxt2pEhT-hNRyuTDadw", // Coach Julia
             "https://showrss.info/other/shows.rss",
             "http://feeds.kottke.org/main",
+            "https://www.soyouwanttowatchfs.com/blog?format=rss",
         };
 
         public Function()
