@@ -43,6 +43,7 @@ namespace Hollaback
             "https://showrss.info/other/shows.rss",
             "http://feeds.kottke.org/main",
             "https://www.soyouwanttowatchfs.com/blog?format=rss",
+            "https://www.ice-dance.com/site/feed/"
         };
 
         public Function()
